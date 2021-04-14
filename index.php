@@ -242,7 +242,7 @@ if(count($graph->getErrors()) > 0) {
     <input type="hidden" name="action" value="verify_degree_nodes">
     <input type="submit" name="submit" value="Calcular" style="margin-top: 15px">
 </form>
-
+<hr>
 <h3>Buscar todos os vizinhos de um vértice:</h3>
 <form method="post" action="index.php">
     <fieldset>
