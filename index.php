@@ -188,8 +188,6 @@ if(count($graph->getErrors()) > 0) {
         }
         print('</ul>');
 
-        print_r($graph->getMatrix());
-
         if(isset($_POST['action'])) {
             switch ($_POST['action'])
             {
