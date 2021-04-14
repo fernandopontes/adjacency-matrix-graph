@@ -147,6 +147,25 @@ class Graph {
         return $nodes_adjacency;
     }
 
+    public function visitAllEdges(): array
+    {
+        $matrix =  $this->getMatrix();
+        $nodes = $this->getNodes();
+        $edges_visited = [];
+
+        for ($i=0;$i<count($nodes);$i++) {
+            for ($z=0;$z<count($nodes);$z++) {
+                if($matrix[$nodes[$i]][$nodes[$z]] == 1) {
+                    if(! in_array(sprintf("(%s,%s)", $nodes[$i], $nodes[$z]), $edges_visited) &&
+                        ! in_array(sprintf("(%s,%s)", $nodes[$z], $nodes[$i]), $edges_visited))
+                        $edges_visited[] = sprintf("(%s,%s)", $nodes[$i], $nodes[$z]);
+                }
+            }
+        }
+
+        return $edges_visited;
+    }
+
     public function formatValue($value): string
     {
         return strtoupper(trim($value));
@@ -214,6 +233,11 @@ if(count($graph->getErrors()) > 0) {
                     }
 
                     break;
+
+                case 'visit_all_edges':
+                        $result = $graph->visitAllEdges();
+                        $msg_return = sprintf("Todas as arestas {%s} do grafo foram visitadas!", implode(',', $result));
+                    break;
             }
 
             printf('<h2 style="text-align:center; color: brown">%s</h2>', $msg_return);
@@ -251,6 +275,12 @@ if(count($graph->getErrors()) > 0) {
     </fieldset>
     <input type="hidden" name="action" value="list_adjacency_nodes">
     <input type="submit" name="submit" value="Buscar" style="margin-top: 15px">
+</form>
+<hr>
+<h3>Visitar todas as arestas do grafo:</h3>
+<form method="post" action="index.php">
+    <input type="hidden" name="action" value="visit_all_edges">
+    <input type="submit" name="submit" value="Visitar arestas" style="margin-top: 15px">
 </form>
 <?php
     }
