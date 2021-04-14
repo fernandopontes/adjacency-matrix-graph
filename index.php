@@ -136,16 +136,12 @@ class Graph {
     {
         $node = $this->formatValue($v);
         $nodes_adjacency = [];
+        $matrix = $this->getMatrix();
+        $nodes = $this->getNodes();
 
-        foreach ($this->getEdges() as $edge) {
-            $e = explode(',', $edge);
-            if(count($e) > 1) {
-                if($node == $e[0]) {
-                    $nodes_adjacency[] = $e[1];
-                } elseif($node == $e[1]) {
-                    $nodes_adjacency[] = $e[0];
-                }
-            }
+        for($i=0; $i<count($matrix); $i++) {
+            if($matrix[$node][$nodes[$i]] == 1)
+                $nodes_adjacency[] = $nodes[$i];
         }
 
         return $nodes_adjacency;
