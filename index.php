@@ -103,25 +103,21 @@ class Graph {
         return $this->nodes;
     }
 
-    public function verifyAdjacencyNodes($v1, $v2)
+    public function verifyAdjacencyNodes($v1, $v2): bool
     {
         $node1 = $this->formatValue($v1);
         $node2 = $this->formatValue($v2);
+        $matrix = $this->getMatrix();
 
-        $edge_form_1 = sprintf("%s,%s", $node1, $node2);
-        $edge_form_2 = sprintf("%s,%s", $node2, $node1);
-
-        if(in_array($edge_form_1, $this->getEdges())) {
+        if($matrix[$node1][$node2] == 1) {
             return true;
         }
         else {
-            if(in_array($edge_form_2, $this->getEdges()))
-                return true;
             return false;
         }
     }
 
-    public function verifyDegreeNodes($v)
+    public function verifyDegreeNodes($v): int
     {
         $node = $this->formatValue($v);
         $degree = 0;
@@ -137,7 +133,7 @@ class Graph {
         return $degree;
     }
 
-    public function listAdjacencyNodes($v)
+    public function listAdjacencyNodes($v): array
     {
         $node = $this->formatValue($v);
         $nodes_adjacency = [];
@@ -156,7 +152,8 @@ class Graph {
         return $nodes_adjacency;
     }
 
-    public function formatValue($value) {
+    public function formatValue($value): string
+    {
         return strtoupper(trim($value));
     }
 }
