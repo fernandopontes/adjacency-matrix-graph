@@ -121,13 +121,12 @@ class Graph {
     {
         $node = $this->formatValue($v);
         $degree = 0;
+        $matrix = $this->getMatrix();
+        $nodes = $this->getNodes();
 
-        foreach ($this->getEdges() as $edge) {
-            $e = explode(',', $edge);
-            if(count($e) > 1) {
-                if($node == $e[0] || $node == $e[1])
-                    $degree++;
-            }
+        for($i=0; $i<count($matrix); $i++) {
+            if($matrix[$node][$nodes[$i]] == 1)
+                $degree++;
         }
 
         return $degree;
@@ -201,9 +200,9 @@ if(count($graph->getErrors()) > 0) {
                 case 'verify_adjacency_nodes':
                     $status = $graph->verifyAdjacencyNodes($_POST['v1'], $_POST['v2']);
                     if($status) {
-                        $msg_return = "Os dois vértices são adjacentes!";
+                        $msg_return = sprintf("Os vértices [%s,%s] são adjacentes!", $graph->formatValue($_POST['v1']), $graph->formatValue($_POST['v2']));
                     } else {
-                        $msg_return = "Os dois vértices não são adjacentes!";
+                        $msg_return = sprintf("Os vértices [%s,%s] não são adjacentes!", $graph->formatValue($_POST['v1']), $graph->formatValue($_POST['v2']));
                     }
                     break;
 
