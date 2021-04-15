@@ -26,6 +26,7 @@ class Graph {
 
             $this->setNodes();
             $this->setMatrix();
+            $this->generateMatrixToJson();
 
         } else {
             $this->setErrors('O arquivo ' . $file . ' não foi localizado neste diretório');
@@ -156,14 +157,44 @@ class Graph {
         for ($i=0;$i<count($nodes);$i++) {
             for ($z=0;$z<count($nodes);$z++) {
                 if($matrix[$nodes[$i]][$nodes[$z]] == 1) {
-                    if(! in_array(sprintf("(%s,%s)", $nodes[$i], $nodes[$z]), $edges_visited) &&
-                        ! in_array(sprintf("(%s,%s)", $nodes[$z], $nodes[$i]), $edges_visited))
-                        $edges_visited[] = sprintf("(%s,%s)", $nodes[$i], $nodes[$z]);
+                    if(! in_array(sprintf("(%s%s%s)", $nodes[$i], $this->separator_edge, $nodes[$z]), $edges_visited) &&
+                        ! in_array(sprintf("(%s%s%s)", $nodes[$z], $this->separator_edge, $nodes[$i]), $edges_visited))
+                        $edges_visited[] = sprintf("(%s%s%s)", $nodes[$i], $this->separator_edge, $nodes[$z]);
                 }
             }
         }
 
         return $edges_visited;
+    }
+
+    public function generateMatrixToJson(): void
+    {
+        $matrix_to_json = [];
+        $nodes = $this->getNodes();
+        $edges = $this->getEdges();
+
+        for($i=0; $i<count($nodes); $i++) {
+            $matrix_to_json['nodes'][$i] = [
+                "match"     =>  "1.0",
+                "name"      =>  sprintf("Vértice %s", $this->formatValue($nodes[$i])),
+                "artist"    =>  sprintf("Vértice %s", $this->formatValue($nodes[$i])),
+                "id"        =>  sprintf("edge-%s", $this->formatValue($nodes[$i])),
+                "playcount" =>  1889572
+            ];
+        }
+
+        for($i=0; $i<count($edges); $i++) {
+            $edge = explode($this->separator_edge, $edges[$i]);
+
+            $matrix_to_json['links'][$i] = [
+                "source" => sprintf("edge-%s", $this->formatValue($edge[0])),
+                "target" => (!isset($edge[1])) ? sprintf("edge-%s", $this->formatValue($edge[0]))
+                    : sprintf("edge-%s", $this->formatValue($edge[1])),
+            ];
+        }
+
+        $json = json_encode($matrix_to_json);
+        file_put_contents("data.json", $json);
     }
 
     public function formatValue($value): string
@@ -180,6 +211,7 @@ class Graph {
     <title>Projeto de Teoria dos Grafos - UEMA</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 
 <body>
@@ -243,45 +275,56 @@ if(count($graph->getErrors()) > 0) {
             printf('<h2 style="text-align:center; color: brown">%s</h2>', $msg_return);
         }
 ?>
-<h3>Verificar se dois vértices são ou não adjacentes:</h3>
-<form method="post" action="index.php">
-    <fieldset>
-    <label>Digite o primeiro vértice:</label>
-        <input type="text" name="v1" required>
-    </fieldset>
-    <fieldset style="margin-top: 15px">
-        <label>Digite o segundo vértice:</label>
-        <input type="text" name="v2" required>
-    </fieldset>
-    <input type="hidden" name="action" value="verify_adjacency_nodes">
-    <input type="submit" name="submit" value="Verificar" style="margin-top: 15px">
-</form>
-<hr>
-<h3>Calcular o grau de um vértice:</h3>
-<form method="post" action="index.php">
-    <fieldset>
-        <label>Digite o vértice:</label>
-        <input type="text" name="v" required>
-    </fieldset>
-    <input type="hidden" name="action" value="verify_degree_nodes">
-    <input type="submit" name="submit" value="Calcular" style="margin-top: 15px">
-</form>
-<hr>
-<h3>Buscar todos os vizinhos de um vértice:</h3>
-<form method="post" action="index.php">
-    <fieldset>
-        <label>Digite o vértice:</label>
-        <input type="text" name="v" required>
-    </fieldset>
-    <input type="hidden" name="action" value="list_adjacency_nodes">
-    <input type="submit" name="submit" value="Buscar" style="margin-top: 15px">
-</form>
-<hr>
-<h3>Visitar todas as arestas do grafo:</h3>
-<form method="post" action="index.php">
-    <input type="hidden" name="action" value="visit_all_edges">
-    <input type="submit" name="submit" value="Visitar arestas" style="margin-top: 15px">
-</form>
+    <h3>Verificar se dois vértices são ou não adjacentes:</h3>
+    <form method="post" action="index.php">
+        <fieldset>
+        <label>Digite o primeiro vértice:</label>
+            <input type="text" name="v1" required>
+        </fieldset>
+        <fieldset style="margin-top: 15px">
+            <label>Digite o segundo vértice:</label>
+            <input type="text" name="v2" required>
+        </fieldset>
+        <input type="hidden" name="action" value="verify_adjacency_nodes">
+        <input type="submit" name="submit" value="Verificar" style="margin-top: 15px">
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h3>Calcular o grau de um vértice:</h3>
+    <form method="post" action="index.php">
+        <fieldset>
+            <label>Digite o vértice:</label>
+            <input type="text" name="v" required>
+        </fieldset>
+        <input type="hidden" name="action" value="verify_degree_nodes">
+        <input type="submit" name="submit" value="Calcular" style="margin-top: 15px">
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h3>Buscar todos os vizinhos de um vértice:</h3>
+    <form method="post" action="index.php">
+        <fieldset>
+            <label>Digite o vértice:</label>
+            <input type="text" name="v" required>
+        </fieldset>
+        <input type="hidden" name="action" value="list_adjacency_nodes">
+        <input type="submit" name="submit" value="Buscar" style="margin-top: 15px">
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h3>Visitar todas as arestas do grafo:</h3>
+    <form method="post" action="index.php">
+        <input type="hidden" name="action" value="visit_all_edges">
+        <input type="submit" name="submit" value="Visitar arestas" style="margin-top: 15px">
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h3>Visualizar o grafo:</h3>
+    <a href="graph.html" target="_blank">Clique aqui para visualizar o grafo</a>
 <?php
     }
     else {

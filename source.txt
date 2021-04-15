@@ -3,4 +3,6 @@ A,B
 B,C
 A,D
 C,D
-E
+E,A
+E,F
+E,G
