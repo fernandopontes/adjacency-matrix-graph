@@ -140,7 +140,7 @@ class Graph {
         $matrix = $this->getMatrix();
         $nodes = $this->getNodes();
 
-        for($i=0; $i<count($matrix); $i++) {
+        for($i=0; $i<count($matrix[$node]); $i++) {
             if($matrix[$node][$nodes[$i]] == 1)
                 $nodes_adjacency[] = $nodes[$i];
         }
