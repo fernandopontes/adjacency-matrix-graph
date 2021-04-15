@@ -89,10 +89,10 @@ class Graph {
         foreach ($this->getEdges() as $edge) {
             $node = explode($this->separator_edge, $edge);
 
-            if($node[0] != "" && !in_array($node[0], $nodes))
+            if(isset($node[0]) && !in_array($node[0], $nodes))
                 $nodes[] = $node[0];
 
-            if($node[1] != "" && !in_array($node[1], $nodes))
+            if(isset($node[1]) && !in_array($node[1], $nodes))
                 $nodes[] = $node[1];
         }
 
