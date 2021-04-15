@@ -27,7 +27,7 @@ if(count($graph->getErrors()) > 0) {
     foreach ($graph->getErrors() as $error) {
         printf('<li>%s</li>', $error);
     }
-    print('</u>');
+    print('</ul>');
 } else {
     if(count($graph->getContentFile()) > 0) {
 
